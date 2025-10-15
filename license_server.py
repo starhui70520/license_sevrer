@@ -168,8 +168,8 @@ def validate_license(token):
         return True, "License valid", decoded
     except jwt.ExpiredSignatureError:
         return False, "License expired", None
-    except jwt.InvalidTokenError as e:
-        return False, f"Invalid license: {str(e)}", None
+    except jwt.InvalidTokenError:
+        return False, "Invalid license", None
 
 
 # API Endpoints
@@ -200,7 +200,8 @@ def initialize():
             'private_key_file': PRIVATE_KEY_FILE
         })
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f"Failed to initialize server: {e}")
+        return jsonify({'error': 'Failed to initialize server'}), 500
 
 
 @app.route('/license/generate', methods=['POST'])
@@ -231,7 +232,8 @@ def api_generate_license():
             'features': features
         })
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f"Failed to generate license: {e}")
+        return jsonify({'error': 'Failed to generate license'}), 500
 
 
 @app.route('/license/validate', methods=['POST'])
@@ -258,7 +260,8 @@ def api_validate_license():
         
         return jsonify(response)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f"Failed to validate license: {e}")
+        return jsonify({'error': 'Failed to validate license'}), 500
 
 
 @app.route('/licenses', methods=['GET'])
@@ -295,7 +298,8 @@ def get_public_key():
             'public_key': public_key
         })
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f"Failed to retrieve public key: {e}")
+        return jsonify({'error': 'Failed to retrieve public key'}), 500
 
 
 def main():
