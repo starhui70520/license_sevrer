@@ -9,14 +9,14 @@ from db import db
 from typing import Optional
 from logger import get_logger
 
-app = FastAPI(title="AgentBox许可证注册服务", version="0.1.0")
+app = FastAPI(title="许可证注册服务", version="0.1.0")
 
 @app.get("/", tags=["Root"], summary="返回服务介绍")
 async def read_root():
     """
     根路径，返回欢迎信息。
     """
-    return models.RootResponse(message="欢迎使用 AgentBox 许可证注册服务")
+    return models.RootResponse(message="欢迎使用许可证注册服务")
 
 @app.get("/health", tags=["Health"], summary="健康检查")
 async def health_check():
