@@ -1,0 +1,17 @@
+# Web framework
+fastapi==0.95.2
+uvicorn==0.22.0
+
+# Database
+aiomysql==0.1.1
+PyMySQL==1.0.3
+
+# Pydantic for data validation
+pydantic==1.10.2
+
+# Cryptography
+cryptography==41.0.7
+
+# Build tools
+nuitka==1.9.7
+ordered-set==4.1.0

@@ -1,0 +1,59 @@
+# Docker Compose 配置文件示例
+# 使用前请复制为 docker-compose.yml 并修改相应配置
+
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: license_mysql
+    restart: always
+    environment:
+      # MySQL root 用户密码（请修改为强密码）
+      MYSQL_ROOT_PASSWORD: "your_root_password_here"
+      # 自动创建的数据库名称
+      MYSQL_DATABASE: "license_db"
+      # 自动创建的用户名
+      MYSQL_USER: "license_user"
+      # 自动创建的用户密码（请修改为强密码，需与 server.conf 一致）
+      MYSQL_PASSWORD: "your_secure_password_here"
+    ports:
+      - "3306:3306"
+    volumes:
+      # MySQL 数据持久化目录
+      - ../mysql/data:/var/lib/mysql
+      # 数据库初始化脚本目录
+      - ../mysql/mysql-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pyour_root_password_here"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - net
+
+  license-server:
+    image: license-server:latest
+    container_name: license-server
+    ports:
+      - "2712:2712"
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Shanghai
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:2712/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - net
+
+networks:
+  # 使用外部网络，需提前创建: docker network create net
+  net:
+    external: true

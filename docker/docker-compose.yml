@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: license_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "your_root_password_here"
+      MYSQL_DATABASE: "license_db"
+      MYSQL_USER: "license_user"
+      MYSQL_PASSWORD: "your_secure_password_here"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ../mysql/data:/var/lib/mysql
+      - ../mysql/mysql-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pyour_root_password_here"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - net
+
+  license-server:
+    image: license-server:latest
+    container_name: license-server
+    ports:
+      - "2712:2712"
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Shanghai
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:2712/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - net
+
+networks:
+  net:
+    external: true
