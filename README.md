@@ -232,6 +232,8 @@ else:
 3. **Authentication**: Add API authentication for production deployments
 4. **Access Control**: Restrict access to license generation endpoints
 5. **Key Rotation**: Implement key rotation policies for long-term deployments
+6. **Debug Mode**: Disable debug mode in production by setting `FLASK_DEBUG=False` environment variable
+7. **Production Server**: Use a production WSGI server (e.g., Gunicorn, uWSGI) instead of Flask's development server
 
 ## File Structure
 
