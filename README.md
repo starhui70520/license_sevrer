@@ -43,6 +43,12 @@ python license_server.py
 
 The server will start on `http://localhost:5000`
 
+For development with debug mode enabled:
+
+```bash
+FLASK_DEBUG=True python license_server.py
+```
+
 ### Initialize the Server
 
 Before generating licenses, initialize the server to create RSA key pairs:

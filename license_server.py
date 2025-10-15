@@ -321,8 +321,8 @@ def main():
     print("  GET  /public-key    - Get public key")
     print("\n" + "=" * 60)
     
-    # Get debug mode from environment variable (default: True for development)
-    debug_mode = os.environ.get('FLASK_DEBUG', 'True').lower() == 'true'
+    # Get debug mode from environment variable (default: False for security)
+    debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
     if not debug_mode:
         print("\n⚠️  NOTE: Running in production mode. Set FLASK_DEBUG=True for debug mode.")
     
